@@ -4,6 +4,9 @@
 /* USE Consuption */
 #define USB_MAX_POWER_CONSUMPTION 100
 
+/* Tap-Hold Configuration */
+#define TAPPING_TERM 200
+
 /* Audio */
 #ifdef AUDIO_ENABLE
 #    define STARTUP_SONG SONG(PLANCK_SOUND)

@@ -16,7 +16,10 @@ enum planck_layers {
 
 enum planck_keycodes {
   QWERTY = SAFE_RANGE,
-  LOL
+  LOL,
+  PRE_DES,
+  NXT_DES,
+  ONEPASS
 };
 
 #define FN_ESC LT(_FUNC, KC_ESC)
@@ -129,19 +132,19 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
     /* Functions
      * ,-----------------------------------------------------------------------------------.
-     * |      | Mute | Vol- | Vol+ | Play | Prev | Play | Next |      |      |      |      |
+     * |      | Mute | Vol- | Vol+ | Play | Prev | Next |      |      |      |      |      |
      * |------+------+------+------+------+-------------+------+------+------+------+------|
-     * |      |      |      |      |      |      |      |      |      |      |      |      |
+     * |      |      |      |      |      |      | P-DS |      |      | N-DS |      |      |
      * |------+------+------+------+------+------|------+------+------+------+------+------|
      * |      |      |      |      |      |      |      |      |      |      |      |      |
      * |------+------+------+------+------+------+------+------+------+------+------+------|
-     * |      |      |      |      |      |      |      |      |      |      |      |      |
+     * |      |      | 1PASS|      |      |      |      |      |      |      |      |      |
      * `-----------------------------------------------------------------------------------'
      */
 	[_MEDIA] = LAYOUT_planck_grid(
         _______ , KC_MUTE, KC_VOLD, KC_VOLU, KC_MPRV, KC_MPLY, KC_MNXT, _______, _______, _______, _______, _______,
-        _______ , _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,
-        _______ , _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,
+        _______ , _______, _______, _______, _______, _______, PRE_DES, _______, _______, NXT_DES, _______, _______,
+        _______ , _______, ONEPASS, _______, _______, _______, _______, _______, _______, _______, _______, _______,
         _______ , _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______
         ),
 
@@ -158,14 +161,41 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   switch (keycode) {
     case LOL:
       if (record->event.pressed) {
-          if(layer_state_is(_LOL))
-            PLAY_SONG(planck_song);
-          else
-            PLAY_SONG(plover_song);
-          layer_invert(_LOL);
+        if(layer_state_is(_LOL))
+          PLAY_SONG(planck_song);
+        else
+          PLAY_SONG(plover_song);
+        layer_invert(_LOL);
       }
       return false;
-      break;
+    case PRE_DES:
+      if (record->event.pressed) {
+        register_code(KC_LWIN);
+        register_code(KC_LCTL);
+        tap_code(KC_LEFT);
+        unregister_code(KC_LWIN);
+        unregister_code(KC_LCTL);
+      }
+      return false;
+    case NXT_DES:
+      if (record->event.pressed) {
+        register_code(KC_LWIN);
+        register_code(KC_LCTL);
+        tap_code(KC_RGHT);
+        unregister_code(KC_LWIN);
+        unregister_code(KC_LCTL);
+      }
+      return false;
+    case ONEPASS:
+      if (record->event.pressed) {
+        register_code(KC_LCTL);
+        register_code(KC_LSFT);
+        tap_code(KC_X);
+        unregister_code(KC_LCTL);
+        unregister_code(KC_LSFT);
+      }
+      return false;
+    default:
+      return true;
   }
-  return true;
 }
